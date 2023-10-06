@@ -2,12 +2,10 @@
 from scrapy import Spider, Request
 
 class RiwsSpider(Spider):
-    name = "prueba"
+    name = "spiderRiws"
     
     def start_requests(self):
         urls = ['https://www.fic.udc.es']
-        print("test")
-        print(urls)
         for url in urls:
             yield Request(url=url, callback=self.parse)
             
@@ -15,12 +13,3 @@ class RiwsSpider(Spider):
         page = response.url
         print(page)
         
-        
-def main():
-    print("Moda-RIWS")
-
-if __name__ == "__main__":
-    main()
-    spider = RiwsSpider()
-    spider.start_requests()
-    
