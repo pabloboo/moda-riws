@@ -1,12 +1,15 @@
+import elasticsearch
 import scrapy
+import json
 from modariws.items import Producto
 from scrapy.linkextractors import LinkExtractor
+from elasticsearch import Elasticsearch
 from scrapy import Request
 
 class ZaraSpider(scrapy.Spider):
     # Nombre de la araña
     name = "zara"
-    
+
     # Dominios permitidos
     allowed_domains = ['zara.com']
     
@@ -14,7 +17,9 @@ class ZaraSpider(scrapy.Spider):
     start_urls = [
         'https://www.zara.com/es/es/man-new-in-collection-l6164.html?v1=2297656'
     ]
-    
+
+    es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+
     # Extraer información de cada url mediante expresiones
     def parse(self, response):
         producto = Producto()
@@ -40,5 +45,20 @@ class ZaraSpider(scrapy.Spider):
             producto['precio'] = response.xpath('//span[@class="money-amount__main"]/text()').extract_first()
             producto['descripcion'] = response.xpath('//div[@class="product-detail-description product-detail-info__description"]//text()').extract_first()
             producto['links'] = outlinks
-                
+
+            def custom_serialize(producto):
+                # Crear un diccionario con los datos del producto
+                serialized_producto = {
+                    'url': producto['url'],
+                    'nombre': producto['nombre'],
+                    'precio': producto['precio'],
+                    'descripcion': producto['descripcion'],
+
+                }
+
+                # Convertir el diccionario en una cadena JSON
+                return json.dumps(serialized_producto)
+
+            self.es.index(index='zara_products', body=custom_serialize(producto))
+
             yield producto
