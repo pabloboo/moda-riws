@@ -5,8 +5,9 @@
 
 import scrapy
 
-
-class ModariwsItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class Producto(scrapy.Item):
+    url = scrapy.Field()
+    nombre = scrapy.Field()
+    precio = scrapy.Field()
+    descripcion = scrapy.Field()
+    links = scrapy.Field()
