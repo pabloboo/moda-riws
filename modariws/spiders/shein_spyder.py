@@ -50,10 +50,6 @@ class SheinSpider(scrapy.Spider):
                 print(f'Precio: {price}')
                 producto['precio'] = price
 
-
-
-
-
             # Add more attribute extraction and printing as needed
 
             producto['links'] = outlinks
@@ -65,7 +61,6 @@ class SheinSpider(scrapy.Spider):
                     'nombre': producto['nombre'],
                     'precio': producto['precio'],
                     # 'color': producto['color']
-
                 }
 
                 # Convert the dictionary to a JSON string
