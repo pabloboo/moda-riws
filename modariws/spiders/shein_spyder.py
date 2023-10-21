@@ -5,12 +5,22 @@ from modariws.items import Producto
 from elasticsearch import Elasticsearch
 from scrapy import Request
 from scrapy.linkextractors import LinkExtractor
+from scrapy_splash import SplashRequest
+
+click_script = """
+  function main(splash, args)
+      local detalles = splash:select('h2.product-intro__description-head')
+      detalles:mouse_click()
+      splash:wait(2)
+      return splash:html()
+  end
+  """
 
 
 class SheinSpider(scrapy.Spider):
     name = "shein"
     allowed_domains = ['shein.com']
-    start_urls = ['https://www.shein.com']
+    start_urls = ['https://es.shein.com']
     es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
     def parse(self, response):
@@ -28,7 +38,13 @@ class SheinSpider(scrapy.Spider):
         for link in links:
             url = link.url
             outlinks.append(url)  # Añadimos el enlace en la lista
-            yield Request(url, callback=self.parse)
+            yield SplashRequest(
+                url,
+                callback=self.parse,
+                endpoint='execute',
+                args={'wait': 2, 'lua_source': click_script, url: url}
+            )
+           # self.logger.info(response.text)
 
         # Check if the page contains product information
         product_details = soup.find('div', class_='product-intro__description')
@@ -50,7 +66,12 @@ class SheinSpider(scrapy.Spider):
                 print(f'Precio: {price}')
                 producto['precio'] = price
 
-            # Add more attribute extraction and printing as needed
+            color_element = response.css('div.color-block')
+
+            # Extraer el texto del elemento
+            color = color_element.css('span.color-999::text').get()
+            print(f'Color: {color}')
+            producto['color'] = color
 
             producto['links'] = outlinks
 
@@ -60,7 +81,7 @@ class SheinSpider(scrapy.Spider):
                     'url': producto['url'],
                     'nombre': producto['nombre'],
                     'precio': producto['precio'],
-                    # 'color': producto['color']
+                    'color': producto['color']
                 }
 
                 # Convert the dictionary to a JSON string
