@@ -1,7 +1,7 @@
 import scrapy
 import json
 from bs4 import BeautifulSoup
-from modariws.items import Producto
+from modariws.items import ProductoShein
 from elasticsearch import Elasticsearch
 from scrapy import Request
 from scrapy.linkextractors import LinkExtractor
@@ -14,7 +14,7 @@ class SheinSpider(scrapy.Spider):
     es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
     def parse(self, response):
-        producto = Producto()
+        producto = ProductoShein()
 
         # Use Beautiful Soup to parse the response content
         soup = BeautifulSoup(response.text, 'html.parser')
