@@ -5,11 +5,13 @@
 
 import scrapy
 
-class Producto(scrapy.Item):
+class ProductoZara(scrapy.Item):
     url = scrapy.Field()
     nombre = scrapy.Field()
     precio = scrapy.Field()
+    descripcion = scrapy.Field()
     color = scrapy.Field()
+    imagen = scrapy.Field()
     links = scrapy.Field()
     
 class ProductoNike(scrapy.Item):
@@ -22,3 +24,10 @@ class ProductoNike(scrapy.Item):
     url = scrapy.Field()
     links = scrapy.Field()
     
+
+class ProductoShein(scrapy.Item):
+    url = scrapy.Field()
+    nombre = scrapy.Field()
+    precio = scrapy.Field()
+    color = scrapy.Field()
+    links = scrapy.Field()
