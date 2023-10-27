@@ -11,3 +11,11 @@ class Producto(scrapy.Item):
     precio = scrapy.Field()
     color = scrapy.Field()
     links = scrapy.Field()
+    
+class ProductoNike(scrapy.Item):
+    nombre = scrapy.Field()
+    subtitulo = scrapy.Field()
+    precio = scrapy.Field()
+    url = scrapy.Field()
+    links = scrapy.Field()
+    
