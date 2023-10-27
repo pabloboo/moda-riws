@@ -5,16 +5,6 @@ from modariws.items import Producto
 from elasticsearch import Elasticsearch
 from scrapy import Request
 from scrapy.linkextractors import LinkExtractor
-from scrapy_splash import SplashRequest
-
-click_script = """
-  function main(splash, args)
-      local detalles = splash:select('h2.product-intro__description-head')
-      detalles:mouse_click()
-      splash:wait(2)
-      return splash:html()
-  end
-  """
 
 
 class SheinSpider(scrapy.Spider):
@@ -38,13 +28,9 @@ class SheinSpider(scrapy.Spider):
         for link in links:
             url = link.url
             outlinks.append(url)  # Añadimos el enlace en la lista
-            yield SplashRequest(
-                url,
-                callback=self.parse,
-                endpoint='execute',
-                args={'wait': 2, 'lua_source': click_script, url: url}
-            )
-           # self.logger.info(response.text)
+            yield Request(url, callback=self.parse)
+
+        # self.logger.info(response.text)
 
         # Check if the page contains product information
         product_details = soup.find('div', class_='product-intro__description')
