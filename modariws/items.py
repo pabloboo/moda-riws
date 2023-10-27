@@ -16,6 +16,9 @@ class ProductoNike(scrapy.Item):
     nombre = scrapy.Field()
     subtitulo = scrapy.Field()
     precio = scrapy.Field()
+    imagen = scrapy.Field()
+    color = scrapy.Field()
+    descripcion = scrapy.Field()
     url = scrapy.Field()
     links = scrapy.Field()
     
