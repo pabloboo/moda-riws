@@ -31,3 +31,11 @@ class ProductoShein(scrapy.Item):
     precio = scrapy.Field()
     color = scrapy.Field()
     links = scrapy.Field()
+
+class Productohym(scrapy.Item):
+    url = scrapy.Field()
+    nombre = scrapy.Field()
+    precio = scrapy.Field()
+    color = scrapy.Field()
+    imagen = scrapy.Field()
+    links = scrapy.Field()
