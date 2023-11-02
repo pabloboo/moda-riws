@@ -61,8 +61,14 @@ class GucciSpider(scrapy.Spider):
             exists = True
             producto['precio'] = precio
         # description_div = soup.find(id='product-details')
-        description=soup.find('p')
-        print(description)
+        description_div=soup.find(class_='product-detail')
+        if description_div:
+            text_description = description_div.find('p').get_text()
+            more_description=description_div.find('ul').get_text()
+            print(text_description)
+            producto['description']=text_description
+            producto['more_data']=more_description
+
         if exists:
             producto['url'] = response.url
 
@@ -81,6 +87,10 @@ class GucciSpider(scrapy.Spider):
                 serialized_producto['precio'] = producto['precio']
             if 'url' in producto:
                 serialized_producto['url'] = producto['url']
+            if 'description' in producto:
+                serialized_producto['description']=producto['description']
+            if 'more_data' in producto:
+                serialized_producto['more_data']=producto['more_data']
 
             # Convert the dictionary to a JSON string
             return json.dumps(serialized_producto)

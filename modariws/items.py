@@ -28,6 +28,8 @@ class ProductoGucci(scrapy.Item):
     nombre = scrapy.Field()
     color = scrapy.Field()
     precio = scrapy.Field()
+    description = scrapy.Field()
+    more_data=scrapy.Field()
     url = scrapy.Field()
     links = scrapy.Field()
     
