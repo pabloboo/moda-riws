@@ -1,56 +1,54 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ReactiveBase, DataSearch, ReactiveList, ResultList} from '@appbaseio/reactivesearch';
-
-const { ResultListWrapper } = ReactiveList;
+import { ReactiveBase, DataSearch, ReactiveList } from '@appbaseio/reactivesearch';
 
 const App = () => {
   return (
     <ReactiveBase
-      app="shein_prod" // Nombre de tu aplicación en Elasticsearch
-      url="http://localhost:9200" // URL de tu clúster de Elasticsearch
+      app="hym_prod" // Your Elasticsearch application name
+      url="http://localhost:9200" // URL of your Elasticsearch cluster
     >
       <div>
-        <h1>Datos de Elasticsearch</h1>
+        <h1>Elasticsearch Data</h1>
         <DataSearch
           componentId="search"
-          dataField="nombre" // Campo en el que se realizará la búsqueda
-          placeholder="Buscar productos"
+          dataField="nombre"
+          placeholder="Search for products"
           react={{ and: ['SearchResult'] }}
         />
 
         <ReactiveList
-
-    componentId="SearchResult"
-    dataField = "nombre"
-    react={{ and: ['search'] }}
->
-    {({ data}) => (
-        <ResultListWrapper>
-            {
-                data.map(item => (
-                    <ResultList key={item._id}>
-                        <ResultList.Content>
-                            <ResultList.Title
-                                dangerouslySetInnerHTML={{
-                                    __html: item.nombre
-                                }}
-                            />
-                        </ResultList.Content>
-                    </ResultList>
-                ))
-            }
-        </ResultListWrapper>
-    )}
-</ReactiveList>
-
-
+          componentId="SearchResult"
+          dataField="nombre"
+          react={{ and: ['search'] }}
+        >
+          {({ data }) => (
+            <ul style={{ listStyleType: 'none' }}>
+              {data.map(item => (
+                <li key={item._id}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                      src={item.imagen}
+                      alt={item.nombre}
+                      style={{ maxWidth: '10%', height: 'auto' }}
+                    />
+                    <div style={{ marginLeft: '10px' }}>
+                      <h3>{item.nombre}</h3>
+                      <p>Precio: {item.precio}</p>
+                      <p>Color: {item.color}</p>
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">
+                        Ver producto
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </ReactiveList>
       </div>
     </ReactiveBase>
   );
 };
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
