@@ -85,29 +85,29 @@ class NikeSpider(scrapy.Spider):
         if exists:
             producto['url'] = response.url
             
-        producto['links'] = outlinks
-        
-        def custom_serialize(producto):
-            serialized_producto = {}
-            # Create a dictionary with product data
-            if 'nombre' in producto:
-                serialized_producto['nombre'] = producto['nombre']
-            if 'subtitulo' in producto:
-                serialized_producto['subtitulo'] = producto['subtitulo']
-            if 'precio' in producto:
-                serialized_producto['precio'] = producto['precio']
-            if 'descripcion' in producto:
-                serialized_producto['descripcion'] = producto['descripcion']
-            if 'color' in producto:
-                serialized_producto['color'] = producto['color']
-            if 'imagen' in producto:
-                serialized_producto['imagen'] = producto['imagen']
-            if 'url' in producto:
-                serialized_producto['url'] = producto['url']
-                
-            # Convert the dictionary to a JSON string
-            return json.dumps(serialized_producto)
-
-        self.es.index(index='nike_prod', body=custom_serialize(producto))
-
-        yield producto
+            producto['links'] = outlinks
+            
+            def custom_serialize(producto):
+                serialized_producto = {}
+                # Create a dictionary with product data
+                if 'nombre' in producto:
+                    serialized_producto['nombre'] = producto['nombre']
+                if 'subtitulo' in producto:
+                    serialized_producto['subtitulo'] = producto['subtitulo']
+                if 'precio' in producto:
+                    serialized_producto['precio'] = producto['precio']
+                if 'descripcion' in producto:
+                    serialized_producto['descripcion'] = producto['descripcion']
+                if 'color' in producto:
+                    serialized_producto['color'] = producto['color']
+                if 'imagen' in producto:
+                    serialized_producto['imagen'] = producto['imagen']
+                if 'url' in producto:
+                    serialized_producto['url'] = producto['url']
+                    
+                # Convert the dictionary to a JSON string
+                return json.dumps(serialized_producto)
+    
+            self.es.index(index='nike_prod', body=custom_serialize(producto))
+    
+            yield producto
