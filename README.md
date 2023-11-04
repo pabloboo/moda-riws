@@ -26,17 +26,7 @@ cd elasticsearch/
 
 Comprobar funcionamiento: `curl -X GET "localhost:9200"`
 
-## Configuración scrapy splash
-
-Descargar docker
-
-Descargar imagen de Scrapy Splash: `docker pull scrapinghub/splash`
-
-Ejecutar Scrapy Splash: `docker run -it -p 8050:8050 --rm scrapinghub/splash`
-
-Entrar en la url http://localhost:8050/ para comprobar que ha funcionado correctamente.
-
-## Ejecución del spider de shein
+## Ejecución del spider de hym
 
 Instalación de dependencias:
 ```bash
@@ -46,17 +36,28 @@ pip install attrs
 pip install service_identity
 pip install elasticsearch
 pip install beautifulsoup4
-pip install scrapy-splash
 ```
 
-Ejecución del spider: `scrapy crawl shein`
+Ejecución del spider: `scrapy crawl hym`
 
 ## Comprobar que los productos se indexan bien en elasticSearch
 
-Petición GET de postman: localhost:9200/shein_prod/_search?size=600
+Petición GET de postman: localhost:9200/hym_prod/_search?size=600
 
 ## Configuración frontend
 ```bash
+curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: application/json" -d '{
+  "properties": {
+    "precio": {
+      "type": "text",
+      "fielddata": true
+    }
+  }
+}'
+```
+
+```bash
 cd frontend
+npm i @appbaseio/reactivesearch@3.45.0 --legacy-peer-deps
 npm start
 ```
