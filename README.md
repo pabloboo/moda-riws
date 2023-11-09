@@ -45,10 +45,11 @@ Ejecución del spider: `scrapy crawl hym`
 Petición GET de postman: localhost:9200/hym_prod/_search?size=600
 
 ## Configuración frontend
+Enable color field data:
 ```bash
 curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: application/json" -d '{
   "properties": {
-    "precio": {
+    "color": {
       "type": "text",
       "fielddata": true
     }
