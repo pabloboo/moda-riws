@@ -50,6 +50,8 @@ class hymSpider(scrapy.Spider):
                 price_element = price_div[0].find('span', class_='price-value')
                 if price_element:
                     price = price_element.get_text().replace('\r', '').replace('\t', '').strip()
+                    price = ''.join(c for c in price if c.isdigit() or c == ',') #delete €
+                    price = float(price.replace(',', '.'))
                     print(f'Precio: {price}')
                     producto['precio'] = price
 
