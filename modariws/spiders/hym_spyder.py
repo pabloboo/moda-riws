@@ -1,7 +1,7 @@
 import scrapy
 import json
 from bs4 import BeautifulSoup
-from modariws.items import Productohym
+from modariws.items import Producto
 from elasticsearch import Elasticsearch
 from scrapy import Request
 from scrapy.linkextractors import LinkExtractor
@@ -15,7 +15,7 @@ class hymSpider(scrapy.Spider):
     es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
     def parse(self, response):
-        producto = Productohym()
+        producto = Producto()
 
         # Use Beautiful Soup to parse the response content
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -96,6 +96,6 @@ class hymSpider(scrapy.Spider):
                 # Convert the dictionary to a JSON string
                 return json.dumps(serialized_producto)
 
-            self.es.index(index='hym_prod', body=custom_serialize(producto))
+            self.es.index(index='productos', body=custom_serialize(producto))
 
             yield producto

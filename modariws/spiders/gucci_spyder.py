@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 from scrapy.linkextractors import LinkExtractor
 from scrapy import Request
 from bs4 import BeautifulSoup
-from modariws.items import ProductoGucci
+from modariws.items import Producto
 
 
 class GucciSpider(scrapy.Spider):
@@ -26,7 +26,7 @@ class GucciSpider(scrapy.Spider):
 
     def parse(self, response):
         exists = False
-        producto = ProductoGucci()
+        producto = Producto()
         soup = BeautifulSoup(response.body, 'html.parser')
 
         # Extraemos los enlaces
@@ -61,13 +61,11 @@ class GucciSpider(scrapy.Spider):
             exists = True
             producto['precio'] = precio
         # description_div = soup.find(id='product-details')
-        description_div=soup.find(class_='product-detail')
+        description_div = soup.find(class_='product-detail')
         if description_div:
             text_description = description_div.find('p').get_text()
-            more_description=description_div.find('ul').get_text()
             print(text_description)
-            producto['description']=text_description
-            producto['more_data']=more_description
+            producto['descripcion'] = text_description
 
         if exists:
             producto['url'] = response.url
@@ -76,9 +74,7 @@ class GucciSpider(scrapy.Spider):
 
         def custom_serialize(producto):
             serialized_producto = {}
-            if 'precio' not in producto:
-                return
-            # Create a dictionary with product data
+
             if 'nombre' in producto:
                 serialized_producto['nombre'] = producto['nombre']
             if 'color' in producto:
@@ -87,14 +83,12 @@ class GucciSpider(scrapy.Spider):
                 serialized_producto['precio'] = producto['precio']
             if 'url' in producto:
                 serialized_producto['url'] = producto['url']
-            if 'description' in producto:
-                serialized_producto['description']=producto['description']
-            if 'more_data' in producto:
-                serialized_producto['more_data']=producto['more_data']
+            if 'descripcion' in producto:
+                serialized_producto['descripcion'] = producto['descripcion']
 
             # Convert the dictionary to a JSON string
             return json.dumps(serialized_producto)
 
-        self.es.index(index='gucci_prod', body=custom_serialize(producto))
+        self.es.index(index='productos', body=custom_serialize(producto))
 
         yield producto

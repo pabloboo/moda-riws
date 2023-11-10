@@ -5,7 +5,8 @@ from elasticsearch import Elasticsearch
 from scrapy.linkextractors import LinkExtractor
 from scrapy import Request
 from bs4 import BeautifulSoup
-from modariws.items import ProductoNike
+from modariws.items import Producto
+
 
 class NikeSpider(scrapy.Spider):
     # Nombre de la araña
@@ -13,60 +14,63 @@ class NikeSpider(scrapy.Spider):
 
     # Dominios permitidos
     allowed_domains = ['nike.com']
-    
+
     # URLs para comenzar a rastrear
-    #Url real https://www.nike.com/es/
-    #Url para testear https://www.nike.com/es/t/sportswear-phoenix-fleece-pantalon-de-chandal-de-talle-alto-oversize-7h49M3/DQ5887-063
+    # Url real https://www.nike.com/es/
+    # Url para testear https://www.nike.com/es/t/sportswear-phoenix-fleece-pantalon-de-chandal-de-talle-alto-oversize-7h49M3/DQ5887-063
     start_urls = [
         'https://www.nike.com/es/'
     ]
-    
+
     es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
-    
+
     def parse(self, response):
         exists = False
-        producto = ProductoNike()
+        producto = Producto()
         soup = BeautifulSoup(response.body, 'html.parser')
 
         # Extraemos los enlaces
         links = LinkExtractor(
             allow_domains=['nike.com']
-            ).extract_links(response)
-        
+        ).extract_links(response)
+
         outlinks = []  # Lista con todos los enlaces
         for link in links:
             url = link.url
-            outlinks.append(url) # Añadimos el enlace en la lista
-            yield Request(url, callback=self.parse) # Generamos la petición
-            
+            outlinks.append(url)  # Añadimos el enlace en la lista
+            yield Request(url, callback=self.parse)  # Generamos la petición
+
         title = soup.find(id='pdp_product_title')
         if title:
             name = title.get_text()
             print(f'Nombre: {name}')
             exists = True
             producto['nombre'] = name
-        
+
         subtitle = soup.find('h2', class_='headline-5 pb1-sm d-sm-ib')
         if subtitle:
             subtitulo = subtitle.get_text()
             print(f'Subtitulo: {subtitulo}')
             exists = True
-            producto['subtitulo'] = subtitulo
-            
+            if 'nombre' in producto:
+                producto['nombre'] = f'{producto["nombre"]} - {subtitulo}'
+            else:
+                producto['nombre'] = subtitulo
+
         price = soup.find('div', class_='product-price css-11s12ax is--current-price css-tpaepq')
         if price:
             precio = price.get_text()
             print(f'Precio: {precio}')
             exists = True
             producto['precio'] = precio
-            
+
         imagen = soup.find('img', class_='css-viwop1 u-full-width u-full-height css-m5dkrx')
         if imagen:
             url_imagen = imagen['src']
             print(f'Url imagen: {url_imagen}')
             exists = True
             producto['imagen'] = url_imagen
-        
+
         description = soup.find('div', class_='description-preview body-2 css-1pbvugb')
         if description:
             descripcion = description.get_text()
@@ -77,16 +81,16 @@ class NikeSpider(scrapy.Spider):
         color = soup.find('li', class_='description-preview__color-description ncss-li')
         if color:
             color_text = color.get_text()
-            color_parsed = color_text.replace('Color mostrado: ','')
+            color_parsed = color_text.replace('Color mostrado: ', '')
             print(f'Color: {color_parsed}')
             exists = True
             producto['color'] = color_parsed
-            
+
         if exists:
             producto['url'] = response.url
-            
+
             producto['links'] = outlinks
-            
+
             def custom_serialize(producto):
                 serialized_producto = {}
                 # Create a dictionary with product data
@@ -104,10 +108,10 @@ class NikeSpider(scrapy.Spider):
                     serialized_producto['imagen'] = producto['imagen']
                 if 'url' in producto:
                     serialized_producto['url'] = producto['url']
-                    
+
                 # Convert the dictionary to a JSON string
                 return json.dumps(serialized_producto)
-    
-            self.es.index(index='nike_prod', body=custom_serialize(producto))
-    
+
+            self.es.index(index='productos', body=custom_serialize(producto))
+
             yield producto

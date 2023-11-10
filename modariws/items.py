@@ -5,46 +5,13 @@
 
 import scrapy
 
-class ProductoZara(scrapy.Item):
-    url = scrapy.Field()
+
+class Producto(scrapy.Item):
     nombre = scrapy.Field()
+    color = scrapy.Field()
     precio = scrapy.Field()
     descripcion = scrapy.Field()
-    color = scrapy.Field()
+    tallas = scrapy.Field()
     imagen = scrapy.Field()
-    links = scrapy.Field()
-    
-class ProductoNike(scrapy.Item):
-    nombre = scrapy.Field()
-    subtitulo = scrapy.Field()
-    precio = scrapy.Field()
-    imagen = scrapy.Field()
-    color = scrapy.Field()
-    descripcion = scrapy.Field()
     url = scrapy.Field()
-    links = scrapy.Field()
-
-class ProductoGucci(scrapy.Item):
-    nombre = scrapy.Field()
-    color = scrapy.Field()
-    precio = scrapy.Field()
-    description = scrapy.Field()
-    more_data=scrapy.Field()
-    url = scrapy.Field()
-    links = scrapy.Field()
-    
-
-class ProductoShein(scrapy.Item):
-    url = scrapy.Field()
-    nombre = scrapy.Field()
-    precio = scrapy.Field()
-    color = scrapy.Field()
-    links = scrapy.Field()
-
-class Productohym(scrapy.Item):
-    url = scrapy.Field()
-    nombre = scrapy.Field()
-    precio = scrapy.Field()
-    color = scrapy.Field()
-    imagen = scrapy.Field()
     links = scrapy.Field()
