@@ -58,11 +58,15 @@ class NicolishopSpider(scrapy.Spider):
             producto['imagen'] = image_url
 
         # Tallas disponibles
-        sizes = []
+        sizes_set = set()
         size_elements = soup.select('div.product-variation-sizes li')
         for size_element in size_elements:
             size = size_element.get_text(strip=True)
-            sizes.append(size)
+            sizes_set.add(size)  # Agregar al conjunto para evitar duplicados
+
+        # Convertir el conjunto en una lista
+        sizes = list(sizes_set)
+
         producto['tallas'] = sizes
         print(f'Tallas: {sizes}')
 
@@ -92,6 +96,8 @@ class NicolishopSpider(scrapy.Spider):
                 serialized_producto['color'] = producto['color']
             if 'imagen' in producto:
                 serialized_producto['imagen'] = producto['imagen']
+            if 'tallas' in producto:
+                serialized_producto['tallas'] = producto['tallas']
 
             # Convert the dictionary to a JSON string
             return json.dumps(serialized_producto)
