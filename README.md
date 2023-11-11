@@ -65,6 +65,7 @@ Alternative to enable color and tallas field data:
 Crate a postman PUT petition with:
 http://localhost:9200/productos/_mapping
 Body -> raw -> JSON:
+```bash
 {
   "properties": {
     "color": {
@@ -77,6 +78,7 @@ Body -> raw -> JSON:
     }
   }
 }
+```
 
 ```bash
 cd frontend
