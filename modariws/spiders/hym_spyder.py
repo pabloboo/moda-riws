@@ -82,6 +82,7 @@ class hymSpider(scrapy.Spider):
                             producto['imagen'] = url_imagen
 
             producto['links'] = outlinks
+            producto['marca'] = "H&M"
 
             def custom_serialize(producto):
                 # Create a dictionary with product data
@@ -91,7 +92,8 @@ class hymSpider(scrapy.Spider):
                     'precio': producto['precio'],
                     'color': producto['color'],
                     'imagen': producto['imagen'],
-                    'tallas': "NA"
+                    'tallas': "NA",
+                    'marca': producto['marca']
                 }
 
                 # Convert the dictionary to a JSON string

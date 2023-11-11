@@ -88,6 +88,8 @@ class BrownieSpider(scrapy.Spider):
 
             producto['url'] = response.url
 
+            producto['marca'] = "Brownie"
+
             producto['links'] = outlinks
 
             def custom_serialize(producto):
@@ -107,6 +109,8 @@ class BrownieSpider(scrapy.Spider):
                     serialized_producto['url'] = producto['url']
                 if 'tallas' in producto:
                     serialized_producto['tallas'] = producto['tallas']
+
+                serialized_producto['marca'] = producto['marca']
 
                 # Convert the dictionary to a JSON string
                 return json.dumps(serialized_producto)

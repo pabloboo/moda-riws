@@ -22,7 +22,8 @@ class NicolishopSpider(scrapy.Spider):
         soup = BeautifulSoup(response.text, 'html.parser')
 
         links = LinkExtractor(
-            allow_domains=['nicolishop.com']
+            allow_domains=['nicolishop.com'],
+            deny=['/tarjeta-regalo/GC-GIFTCARD.html']
         ).extract_links(response)
 
         outlinks = []  # Lista con todos los enlaces
@@ -56,6 +57,8 @@ class NicolishopSpider(scrapy.Spider):
             image_url = image_element['src']
             print(f'URL de la imagen: {image_url}')
             producto['imagen'] = image_url
+        else:
+            return
 
         # Tallas disponibles
         sizes_set = set()
@@ -81,6 +84,8 @@ class NicolishopSpider(scrapy.Spider):
 
         producto['links'] = outlinks
 
+        producto['marca'] = "Nicoli"
+
         def custom_serialize(producto):
             serialized_producto = {}
             # Create a dictionary with product data
@@ -98,6 +103,8 @@ class NicolishopSpider(scrapy.Spider):
                 serialized_producto['imagen'] = producto['imagen']
             if 'tallas' in producto:
                 serialized_producto['tallas'] = producto['tallas']
+
+            serialized_producto['marca'] = producto['marca']
 
             # Convert the dictionary to a JSON string
             return json.dumps(serialized_producto)

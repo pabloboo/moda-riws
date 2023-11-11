@@ -13,5 +13,6 @@ class Producto(scrapy.Item):
     descripcion = scrapy.Field()
     tallas = scrapy.Field()
     imagen = scrapy.Field()
+    marca = scrapy.Field()
     url = scrapy.Field()
     links = scrapy.Field()

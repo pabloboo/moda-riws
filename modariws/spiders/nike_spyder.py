@@ -88,6 +88,7 @@ class NikeSpider(scrapy.Spider):
 
         if exists:
             producto['url'] = response.url
+            producto['marca'] = "Nike"
 
             producto['links'] = outlinks
 
@@ -109,6 +110,8 @@ class NikeSpider(scrapy.Spider):
                 if 'url' in producto:
                     serialized_producto['url'] = producto['url']
                 serialized_producto['tallas'] = "NA"
+                serialized_producto['marca'] = producto['marca']
+
 
                 # Convert the dictionary to a JSON string
                 return json.dumps(serialized_producto)
