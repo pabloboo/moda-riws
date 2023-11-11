@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import {ReactiveBase, DataSearch, ReactiveList, SingleDropdownList, RangeInput, SelectedFilters,} from '@appbaseio/reactivesearch';
+import {
+  ReactiveBase,
+  DataSearch,
+  ReactiveList,
+  SingleDropdownList,
+  RangeInput,
+  SelectedFilters,
+  MultiDropdownList,
+} from '@appbaseio/reactivesearch';
 
 const App = () => {
   const [resetKey, setResetKey] = useState(0);
@@ -26,7 +34,7 @@ const App = () => {
           componentId="search"
           dataField="nombre"
           placeholder="Buscar prendas"
-          react={{ and: ['PriceSlider', 'ColorFilter', 'TallasFilter'] }}
+          react={{ and: [ 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
           style={{ width: '75%', margin: '0 auto' }}
         />
 
@@ -40,48 +48,81 @@ const App = () => {
               tooltipTrigger='hover'
               range={{
                 start: 0,
-                end: 1000,
+                end: 500,
               }}
               rangeLabels={{
                 start: "0€",
-                end: "1000€",
+                end: "500€",
               }}
-              react={{ and: ['search', 'ColorFilter', 'TallasFilter'] }}
+              react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
               title='Precio'
             />
           </div>
 
           {/* Filtro de color */}
           <div style={{ width: '25%', marginRight: '10%' }}>
-            <SingleDropdownList
+             <MultiDropdownList
               componentId="ColorFilter"
               dataField="color"
               title="Colores"
               size={100}
-              showSearch={true}
-              showMissing={true}
+              sortBy="count"
+              showCount={true}
               placeholder="Buscar colores"
               react={{
-                and: ['search', 'PriceSlider', 'TallasFilter'],
+                and: ['search', 'PriceSlider', 'TallasFilter', 'MarcaFilter']
               }}
-            />
+              showFilter={true}
+              filterLabel="Colores"
+              URLParams={false}
+              loader="Loading ..."
+          />
           </div>
 
           {/* Filtro de tallas */}
           <div style={{ width: '25%', marginRight: '10%' }}>
-            <SingleDropdownList
+            <MultiDropdownList
               componentId="TallasFilter"
               dataField="tallas"
               title="Tallas"
               size={100}
-              showSearch={true}
-              showMissing={true}
+              sortBy="count"
+              showCount={true}
               placeholder="Buscar tallas"
               react={{
-                and: ['search', 'PriceSlider', 'ColorFilter'],
+                and: ['search', 'PriceSlider', 'ColorFilter', 'MarcaFilter']
               }}
-            />
+              showFilter={true}
+              filterLabel="Tallas"
+              URLParams={false}
+              loader="Loading ..."
+          />
+
           </div>
+          
+          
+            {/* Filtro de marca */}
+          <div style={{ width: '25%', marginRight: '10%' }}>
+           <MultiDropdownList
+              componentId="MarcaFilter"
+              dataField="marca"
+              title="Marcas"
+              size={100}
+              sortBy="count"
+              showCount={true}
+              placeholder="Buscar marcas"
+              react={{
+                and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter']
+              }}
+              showFilter={true}
+              filterLabel="Marcas"
+              URLParams={false}
+              loader="Loading ..."
+          />
+          </div>
+
+
+          
         </div>
 
         {/* Filtros seleccionados */}
@@ -98,7 +139,7 @@ const App = () => {
         <ReactiveList
           componentId="SearchResult"
           dataField="nombre"
-          react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter'] }}
+          react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
         >
           {({ data }) => (
             <ul style={{ listStyleType: 'none', display: 'flex', flexWrap: 'wrap' }}>
@@ -112,9 +153,10 @@ const App = () => {
                     />
                     <div style={{ marginLeft: '10px' }}>
                       <h3>{item.nombre}</h3>
-                      <p>Precio: {item.precio}</p>
+                      <p>Precio: {item.precio} €</p>
                       <p>Color: {item.color}</p>
                       <p>Tallas: {item.tallas}</p>
+                      <p>Marca: {item.marca}</p>
                       <a href={item.url} target="_blank" rel="noopener noreferrer">
                         Ver producto
                       </a>

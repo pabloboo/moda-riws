@@ -82,7 +82,7 @@ class hymSpider(scrapy.Spider):
                             producto['imagen'] = url_imagen
 
             producto['links'] = outlinks
-            producto['marca'] = "H&M"
+            producto['marca'] = "HyM"
 
             def custom_serialize(producto):
                 # Create a dictionary with product data

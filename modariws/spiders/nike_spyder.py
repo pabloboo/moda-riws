@@ -55,15 +55,21 @@ class NikeSpider(scrapy.Spider):
             else:
                 producto['nombre'] = subtitulo
 
-        price = soup.find('div', class_='product-price css-11s12ax is--current-price css-tpaepq')
-        if price:
-            precio = price.get_text()
+        price_element = soup.find('div', class_='product-price css-11s12ax is--current-price css-tpaepq')
+        if price_element:
+            price = price_element.get_text().replace('\r', '').replace('\t', '').strip()
+            price = ''.join(c for c in price if c.isdigit() or c == ',')  # delete €
+            price = float(price.replace(',', '.'))
+            print(f'Precio: {price}')
+            producto['precio'] = price
             exists = True
-            producto['precio'] = precio
         else:
             discounted_price = soup.find('div', class_='product-price is--current-price css-s56yt7 css-xq7tty')
             if discounted_price:
-                precio_descuento = discounted_price.get_text()
+                precio_descuento = discounted_price.get_text().replace('\r', '').replace('\t', '').strip()
+                precio_descuento = ''.join(c for c in precio_descuento if c.isdigit() or c == ',')  # delete €
+                precio_descuento = float(precio_descuento.replace(',', '.'))
+                print(f'Precio: {precio_descuento}')
                 exists = True
                 producto['precio'] = precio_descuento
 

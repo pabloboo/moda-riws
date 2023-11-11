@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import re
 
 import scrapy
 from elasticsearch import Elasticsearch
@@ -13,7 +14,7 @@ from modariws.items import Producto
 class NicolishopSpider(scrapy.Spider):
     name = "nicoli"
     allowed_domains = ['nicolishop.com']
-    start_urls = ['https://www.nicolishop.com/es/es/abrigo-oversize-cuadros/232M505304-35.html']
+    start_urls = ['https://www.nicolishop.com']
 
     es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
@@ -21,9 +22,15 @@ class NicolishopSpider(scrapy.Spider):
         producto = Producto()
         soup = BeautifulSoup(response.text, 'html.parser')
 
+        exclude_pattern = re.compile(
+            r'^https://www\.nicolishop\.com/es/es/bebe|'
+            r'^https://www\.nicolishop\.com/es/es/tweena|'
+            r'^https://www\.nicolishop\.com/es/es/tweeno|'
+            r'https://www\.nicolishop\.com/es/es/tarjeta-regalo'
+        )
         links = LinkExtractor(
             allow_domains=['nicolishop.com'],
-            deny=['/tarjeta-regalo/GC-GIFTCARD.html']
+            deny=exclude_pattern
         ).extract_links(response)
 
         outlinks = []  # Lista con todos los enlaces
@@ -34,17 +41,22 @@ class NicolishopSpider(scrapy.Spider):
 
         # Nombre del producto
         name_element = soup.find('h1', class_='product-name')
-        if name_element:
+        if name_element and 'tarjeta regalo' not in name_element.get_text(strip=True).lower():
             name = name_element.get_text(strip=True)
             producto['nombre'] = name
             print(f'Nombre: {name}')
 
+        else:
+            return
+
         # Precio del producto
         price_element = soup.find('span', class_='price-sales')
         if price_element:
-            price = price_element.get_text(strip=True)
-            producto['precio'] = price
+            price = price_element.get_text().replace('\r', '').replace('\t', '').strip()
+            price = ''.join(c for c in price if c.isdigit() or c == ',')  # delete €
+            price = float(price.replace(',', '.'))
             print(f'Precio: {price}')
+            producto['precio'] = price
 
         color_element = soup.select_one('div.product-color-selection-swatches .swatch-color-wrapper.active span')
         if color_element:
@@ -61,17 +73,14 @@ class NicolishopSpider(scrapy.Spider):
             return
 
         # Tallas disponibles
-        sizes_set = set()
         size_elements = soup.select('div.product-variation-sizes li')
+        tallas = set()
         for size_element in size_elements:
             size = size_element.get_text(strip=True)
-            sizes_set.add(size)  # Agregar al conjunto para evitar duplicados
-
-        # Convertir el conjunto en una lista
-        sizes = list(sizes_set)
-
-        producto['tallas'] = sizes
-        print(f'Tallas: {sizes}')
+            tallas.add(size)  # Agregar al conjunto para evitar duplicados
+        tallas_str = ', '.join(sorted(tallas))  # Ordenar tallas y unirlas con comas
+        producto['tallas'] = tallas_str
+        print(f'Tallas: {tallas_str}')
 
         # Descripción del producto
         description_element = soup.find('div', class_='product-description')

@@ -47,13 +47,17 @@ Petición GET de postman: localhost:9200/hym_prod/_search?size=600
 ## Configuración frontend
 Enable color and tallas field data:
 ```bash
-curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: application/json" -d '{
+curl -X PUT "http://localhost:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
   "properties": {
     "color": {
       "type": "text",
       "fielddata": true
     },
     "tallas": {
+      "type": "text",
+      "fielddata": true
+    },
+    "marca": {
       "type": "text",
       "fielddata": true
     }

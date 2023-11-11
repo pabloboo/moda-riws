@@ -46,11 +46,14 @@ class BrownieSpider(scrapy.Spider):
             exists = True
             producto['nombre'] = name
 
-        price = soup.find('span', class_='current-price-display')
-        if price:
-            precio = price.get_text()
+        price_element = soup.find('span', class_='current-price-display')
+        if price_element:
+            price = price_element.get_text().replace('\r', '').replace('\t', '').strip()
+            price = ''.join(c for c in price if c.isdigit() or c == ',')  # delete €
+            price = float(price.replace(',', '.'))
+            print(f'Precio: {price}')
             exists = True
-            producto['precio'] = precio
+            producto['precio'] = price
 
         imagen = soup.find('a', class_='prodmini fancyimg visib')
         if imagen:
