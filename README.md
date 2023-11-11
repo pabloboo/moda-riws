@@ -61,9 +61,8 @@ curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: applicat
 }'
 ```
 
-Alternative to enable color and tallas field data:
-Crate a postman PUT petition with:
-http://localhost:9200/productos/_mapping
+## Alternative to enable color and tallas field data. 
+Create a postman PUT petition with: http://localhost:9200/productos/_mapping
 Body -> raw -> JSON:
 ```bash
 {
