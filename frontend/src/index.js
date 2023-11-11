@@ -5,7 +5,7 @@ import { ReactiveBase, DataSearch, ReactiveList, SingleDropdownList, RangeInput,
 const App = () => {
   return (
     <ReactiveBase
-      app="hym_prod" // Your Elasticsearch application name
+      app="productos" // Your Elasticsearch application name
       url="http://localhost:9200" // URL of your Elasticsearch cluster
     >
       <div>
@@ -57,6 +57,22 @@ const App = () => {
               }}
             />
           </div>
+
+          {/* Filtro de tallas */}
+          <div style={{ width: '25%', marginRight: '10%' }}>
+            <SingleDropdownList
+              componentId="TallasFilter"
+              dataField="tallas"
+              title="Tallas"
+              size={100} // Adjust the number of colors to display
+              showSearch={true}
+              showMissing={true}
+              placeholder="Buscar tallas"
+              react={{
+                and: ['SearchResult', 'search', 'PriceSlider'],
+              }}
+            />
+          </div>
           
         </div>
 
@@ -64,7 +80,7 @@ const App = () => {
         <ReactiveList
           componentId="SearchResult"
           dataField="nombre"
-          react={{ and: ['search', 'PriceSlider', 'ColorFilter'] }}
+          react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter'] }}
         >
           {({ data }) => (
             <ul style={{ listStyleType: 'none', display: 'flex', flexWrap: 'wrap' }}>
