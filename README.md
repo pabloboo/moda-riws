@@ -61,6 +61,12 @@ curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: applicat
 }'
 ```
 
+```bash
+cd frontend
+npm i @appbaseio/reactivesearch@3.45.0 --legacy-peer-deps
+npm start
+```
+
 ## Alternative to enable color and tallas field data. 
 Create a postman PUT petition with: http://localhost:9200/productos/_mapping
 Body -> raw -> JSON:
@@ -77,10 +83,4 @@ Body -> raw -> JSON:
     }
   }
 }
-```
-
-```bash
-cd frontend
-npm i @appbaseio/reactivesearch@3.45.0 --legacy-peer-deps
-npm start
 ```
