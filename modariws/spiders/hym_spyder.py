@@ -90,7 +90,8 @@ class hymSpider(scrapy.Spider):
                     'nombre': producto['nombre'],
                     'precio': producto['precio'],
                     'color': producto['color'],
-                    'imagen': producto['imagen']
+                    'imagen': producto['imagen'],
+                    'tallas': "NA"
                 }
 
                 # Convert the dictionary to a JSON string

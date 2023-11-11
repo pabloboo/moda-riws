@@ -108,6 +108,7 @@ class NikeSpider(scrapy.Spider):
                     serialized_producto['imagen'] = producto['imagen']
                 if 'url' in producto:
                     serialized_producto['url'] = producto['url']
+                serialized_producto['tallas'] = "NA"
 
                 # Convert the dictionary to a JSON string
                 return json.dumps(serialized_producto)

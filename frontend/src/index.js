@@ -114,6 +114,7 @@ const App = () => {
                       <h3>{item.nombre}</h3>
                       <p>Precio: {item.precio}</p>
                       <p>Color: {item.color}</p>
+                      <p>Tallas: {item.tallas}</p>
                       <a href={item.url} target="_blank" rel="noopener noreferrer">
                         Ver producto
                       </a>
