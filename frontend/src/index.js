@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ReactiveBase, DataSearch, ReactiveList, SingleDropdownList, RangeInput, ReactiveComponent } from '@appbaseio/reactivesearch';
+import {ReactiveBase, DataSearch, ReactiveList, SingleDropdownList, RangeInput, SelectedFilters,} from '@appbaseio/reactivesearch';
 
 const App = () => {
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleClearAll = () => {
+    // Incrementar la clave de reinicio para forzar la actualización de ReactiveSearch
+    setResetKey((prevKey) => prevKey + 1);
+  };
+
   return (
     <ReactiveBase
-      app="productos" // Your Elasticsearch application name
-      url="http://localhost:9200" // URL of your Elasticsearch cluster
+      app="productos" // Tu nombre de aplicación Elasticsearch
+      url="http://localhost:9200" // URL de tu clúster Elasticsearch
+      key={resetKey} // Utilizamos la clave de reinicio para forzar la actualización de ReactiveSearch
     >
       <div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: '1%' }}>
@@ -18,13 +26,14 @@ const App = () => {
           componentId="search"
           dataField="nombre"
           placeholder="Buscar prendas"
-          react={{ and: ['SearchResult', 'PriceSlider', 'ColorFilter'] }}
+          react={{ and: ['PriceSlider', 'ColorFilter', 'TallasFilter'] }}
           style={{ width: '75%', margin: '0 auto' }}
         />
 
+        {/* Filtros */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '3%', marginBottom: '5%' }}>
-          <div style={{ width: '25%', marginRight: '10%', marginLeft: '10%'}}>
-            {/* Filtro de precio */}
+          {/* Filtro de precio */}
+          <div style={{ width: '25%', marginRight: '10%', marginLeft: '10%' }}>
             <RangeInput
               componentId='PriceSlider'
               dataField='precio'
@@ -37,7 +46,7 @@ const App = () => {
                 start: "0€",
                 end: "1000€",
               }}
-              react={{and: ['SearchResult', 'search', 'ColorFilter'],}}
+              react={{ and: ['search', 'ColorFilter', 'TallasFilter'] }}
               title='Precio'
             />
           </div>
@@ -48,12 +57,12 @@ const App = () => {
               componentId="ColorFilter"
               dataField="color"
               title="Colores"
-              size={100} // Adjust the number of colors to display
+              size={100}
               showSearch={true}
               showMissing={true}
               placeholder="Buscar colores"
               react={{
-                and: ['SearchResult', 'search', 'PriceSlider'],
+                and: ['search', 'PriceSlider', 'TallasFilter'],
               }}
             />
           </div>
@@ -64,16 +73,25 @@ const App = () => {
               componentId="TallasFilter"
               dataField="tallas"
               title="Tallas"
-              size={100} // Adjust the number of colors to display
+              size={100}
               showSearch={true}
               showMissing={true}
               placeholder="Buscar tallas"
               react={{
-                and: ['SearchResult', 'search', 'PriceSlider'],
+                and: ['search', 'PriceSlider', 'ColorFilter'],
               }}
             />
           </div>
-          
+        </div>
+
+        {/* Filtros seleccionados */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          <SelectedFilters
+            showClearAll={true}
+            clearAllLabel="Limpiar todo"
+            componentId="search"
+            onClear={handleClearAll} // Agregamos la lógica de reinicio aquí
+          />
         </div>
 
         {/* Lista de resultados */}
@@ -84,7 +102,7 @@ const App = () => {
         >
           {({ data }) => (
             <ul style={{ listStyleType: 'none', display: 'flex', flexWrap: 'wrap' }}>
-              {data.map(item => (
+              {data.map((item) => (
                 <li key={item._id} style={{ flex: '0 0 50%', padding: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img
