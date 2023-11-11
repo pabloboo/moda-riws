@@ -45,17 +45,38 @@ Ejecución del spider: `scrapy crawl hym`
 Petición GET de postman: localhost:9200/hym_prod/_search?size=600
 
 ## Configuración frontend
-Enable color field data:
+Enable color and tallas field data:
 ```bash
 curl -X PUT "http://localhost:9200/hym_prod/_mapping" -H "Content-Type: application/json" -d '{
   "properties": {
     "color": {
       "type": "text",
       "fielddata": true
+    },
+    "tallas": {
+      "type": "text",
+      "fielddata": true
     }
   }
 }'
 ```
+
+Alternative to enable color and tallas field data:
+Crate a postman PUT petition with:
+http://localhost:9200/productos/_mapping
+Body -> raw -> JSON:
+{
+  "properties": {
+    "color": {
+      "type": "text",
+      "fielddata": true
+    },
+    "tallas": {
+      "type": "text",
+      "fielddata": true
+    }
+  }
+}
 
 ```bash
 cd frontend

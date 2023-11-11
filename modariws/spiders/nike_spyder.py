@@ -16,7 +16,7 @@ class NikeSpider(scrapy.Spider):
     allowed_domains = ['nike.com']
 
     # URLs para comenzar a rastrear
-    # Url real https://www.nike.com/es/
+    # Url real 
     # Url para testear https://www.nike.com/es/t/sportswear-phoenix-fleece-pantalon-de-chandal-de-talle-alto-oversize-7h49M3/DQ5887-063
     start_urls = [
         'https://www.nike.com/es/'
@@ -43,14 +43,12 @@ class NikeSpider(scrapy.Spider):
         title = soup.find(id='pdp_product_title')
         if title:
             name = title.get_text()
-            print(f'Nombre: {name}')
             exists = True
             producto['nombre'] = name
 
         subtitle = soup.find('h2', class_='headline-5 pb1-sm d-sm-ib')
         if subtitle:
             subtitulo = subtitle.get_text()
-            print(f'Subtitulo: {subtitulo}')
             exists = True
             if 'nombre' in producto:
                 producto['nombre'] = f'{producto["nombre"]} - {subtitulo}'
@@ -60,21 +58,24 @@ class NikeSpider(scrapy.Spider):
         price = soup.find('div', class_='product-price css-11s12ax is--current-price css-tpaepq')
         if price:
             precio = price.get_text()
-            print(f'Precio: {precio}')
             exists = True
             producto['precio'] = precio
+        else:
+            discounted_price = soup.find('div', class_='product-price is--current-price css-s56yt7 css-xq7tty')
+            if discounted_price:
+                precio_descuento = discounted_price.get_text()
+                exists = True
+                producto['precio'] = precio_descuento
 
         imagen = soup.find('img', class_='css-viwop1 u-full-width u-full-height css-m5dkrx')
         if imagen:
             url_imagen = imagen['src']
-            print(f'Url imagen: {url_imagen}')
             exists = True
             producto['imagen'] = url_imagen
 
         description = soup.find('div', class_='description-preview body-2 css-1pbvugb')
         if description:
             descripcion = description.get_text()
-            print(f'Descripcion: {descripcion}')
             exists = True
             producto['descripcion'] = descripcion
 
@@ -82,7 +83,6 @@ class NikeSpider(scrapy.Spider):
         if color:
             color_text = color.get_text()
             color_parsed = color_text.replace('Color mostrado: ', '')
-            print(f'Color: {color_parsed}')
             exists = True
             producto['color'] = color_parsed
 
