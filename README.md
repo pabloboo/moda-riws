@@ -42,7 +42,7 @@ Ejecución del spider: `scrapy crawl hym`
 
 ## Comprobar que los productos se indexan bien en elasticSearch
 
-Petición GET de postman: localhost:9200/hym_prod/_search?size=600
+Petición GET de postman: localhost:9200/productos/_search?size=600
 
 ## Configuración frontend
 Enable color and tallas field data:
@@ -87,4 +87,18 @@ Body -> raw -> JSON:
     }
   }
 }
+```
+
+## Ejecutar docker
+
+Mover la carpeta elasticsearch-8.10.2/ a modariws/ (próxima actualización bajarla directamente en el docker)
+
+```bash
+cd modariws/
+docker build -t elasticsearch-image .
+docker run --name elasticsearch -p 9200:9200 --network moda-riws-network elasticsearch-image
+```
+
+```bash
+docker compose up
 ```

@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+
+  # elasticsearch:
+  #   build: 
+  #     context: ./modariws
+  #   container_name: elasticsearch
+  #   ports:
+  #     - 9200:9200
+  #   networks:
+  #     - moda-riws-network
+
+  scrapy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticsearch
+    networks:
+      - moda-riws-network
+
+  web-app:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - scrapy
+    networks:
+      - moda-riws-network
+
+networks:
+  moda-riws-network:
+    driver: bridge

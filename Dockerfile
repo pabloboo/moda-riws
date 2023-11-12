@@ -1,0 +1,46 @@
+FROM python:3.9-slim-bullseye
+
+# Install Python dependencies
+# COPY devops/requirements.txt /app/requirements.txt
+# RUN pip install --no-cache-dir -r /app/requirements.txt
+# Install Python dependencies for Scrapy
+RUN pip install Scrapy
+RUN pip install --upgrade --force-reinstall Scrapy Twisted
+RUN pip install attrs
+RUN pip install service_identity
+RUN pip install elasticsearch
+RUN pip install beautifulsoup4
+
+# Create a non-root user (needed to be able to execute elasticsearch)
+RUN useradd -m nonrootuser
+# Set the working directory and change ownership to the non-root user
+WORKDIR /app
+RUN chown -R nonrootuser /app
+# Give the non-root user all permissions on the /app directory
+RUN chmod -R 777 /app
+# Switch to the non-root user
+USER nonrootuser
+RUN touch /app/productos.json
+RUN chmod 777 /app/productos.json
+
+# Create a working directory for your Scrapy project
+WORKDIR /app
+
+# Copy your Scrapy project into the container
+COPY . /app
+
+# Change to root user temporarily
+USER root
+# Give permissions to write the file
+RUN chmod +w /app/productos.json
+# Change ownership to the non-root user
+RUN chown nonrootuser /app/productos.json
+# Same with entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+RUN chown nonrootuser /app/entrypoint.sh
+# RUN chmod +r /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
+# Switch back to non-root user
+USER nonrootuser
+
+# Set up entry point script
+ENTRYPOINT ["/app/entrypoint.sh"]
