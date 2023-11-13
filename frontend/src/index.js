@@ -10,6 +10,8 @@ import {
   MultiDropdownList,
 } from '@appbaseio/reactivesearch';
 
+import './App.css'; // Agrega el archivo de estilos
+
 const App = () => {
   const [resetKey, setResetKey] = useState(0);
 
@@ -20,48 +22,44 @@ const App = () => {
 
   return (
     <ReactiveBase
-      app="productos" // Tu nombre de aplicación Elasticsearch
-      url="http://localhost:9200" // URL de tu clúster Elasticsearch
-      key={resetKey} // Utilizamos la clave de reinicio para forzar la actualización de ReactiveSearch
+      app="productos"
+      url="http://localhost:9200"
+      key={resetKey}
     >
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: '1%' }}>
+      <div className="app-container">
+        <div className="header">
           <h1>Fashion Findr</h1>
         </div>
 
-        {/* Buscador */}
         <DataSearch
           componentId="search"
           dataField="nombre"
           placeholder="Buscar prendas"
-          react={{ and: [ 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
-          style={{ width: '75%', margin: '0 auto' }}
+          react={{ and: ['PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
+          style={{ width: '75%', margin: '0 auto', marginBottom: '20px' }}
         />
 
-        {/* Filtros */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '3%', marginBottom: '5%' }}>
-          {/* Filtro de precio */}
-          <div style={{ width: '25%', marginRight: '10%', marginLeft: '10%' }}>
+        <div className="filters-container">
+          <div className="filter-section">
             <RangeInput
               componentId='PriceSlider'
               dataField='precio'
               tooltipTrigger='hover'
               range={{
                 start: 0,
-                end: 500,
+                end: 250,
               }}
               rangeLabels={{
                 start: "0€",
-                end: "500€",
+                end: "250€",
               }}
               react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
               title='Precio'
             />
           </div>
 
-          {/* Filtro de color */}
-          <div style={{ width: '25%', marginRight: '10%' }}>
-             <MultiDropdownList
+          <div className="filter-section">
+            <MultiDropdownList
               componentId="ColorFilter"
               dataField="color"
               title="Colores"
@@ -76,11 +74,10 @@ const App = () => {
               filterLabel="Colores"
               URLParams={false}
               loader="Loading ..."
-          />
+            />
           </div>
 
-          {/* Filtro de tallas */}
-          <div style={{ width: '25%', marginRight: '10%' }}>
+          <div className="filter-section">
             <MultiDropdownList
               componentId="TallasFilter"
               dataField="tallas"
@@ -96,14 +93,11 @@ const App = () => {
               filterLabel="Tallas"
               URLParams={false}
               loader="Loading ..."
-          />
-
+            />
           </div>
-          
-          
-            {/* Filtro de marca */}
-          <div style={{ width: '25%', marginRight: '10%' }}>
-           <MultiDropdownList
+
+          <div className="filter-section">
+            <MultiDropdownList
               componentId="MarcaFilter"
               dataField="marca"
               title="Marcas"
@@ -118,40 +112,35 @@ const App = () => {
               filterLabel="Marcas"
               URLParams={false}
               loader="Loading ..."
-          />
+            />
           </div>
-
-
-          
         </div>
 
-        {/* Filtros seleccionados */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        <div className="selected-filters">
           <SelectedFilters
             showClearAll={true}
             clearAllLabel="Limpiar todo"
             componentId="search"
-            onClear={handleClearAll} // Agregamos la lógica de reinicio aquí
+            onClear={handleClearAll}
           />
         </div>
 
-        {/* Lista de resultados */}
         <ReactiveList
           componentId="SearchResult"
           dataField="nombre"
           react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
         >
           {({ data }) => (
-            <ul style={{ listStyleType: 'none', display: 'flex', flexWrap: 'wrap' }}>
+            <ul className="result-list">
               {data.map((item) => (
-                <li key={item._id} style={{ flex: '0 0 50%', padding: '10px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                <li key={item._id} className="result-item">
+                  <div className="result-item-container">
                     <img
                       src={item.imagen}
                       alt={item.nombre}
-                      style={{ maxWidth: '20%', height: 'auto' }}
+                      className="result-item-image"
                     />
-                    <div style={{ marginLeft: '10px' }}>
+                    <div className="result-item-details">
                       <h3>{item.nombre}</h3>
                       <p>Precio: {item.precio} €</p>
                       <p>Color: {item.color}</p>

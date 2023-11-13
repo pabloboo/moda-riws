@@ -11,3 +11,68 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* App.css */
+
+.app-container {
+  margin: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-section {
+  width: 24%;
+}
+
+.selected-filters {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.result-list {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.result-item {
+  flex: 0 0 48%;
+  margin: 1%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.result-item-container {
+  display: flex;
+  align-items: center;
+}
+
+.result-item-image {
+  max-width: 20%;
+  height: auto;
+  margin-right: 10px;
+}
+
+.result-item-details {
+  margin-left: 10px;
+}
+
+.result-item-details h3 {
+  margin: 0;
+}
+
+.result-item-details a {
+  color: #007bff;
+  text-decoration: none;
+}
+
