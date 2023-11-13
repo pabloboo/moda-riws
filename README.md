@@ -84,6 +84,10 @@ Body -> raw -> JSON:
     "tallas": {
       "type": "text",
       "fielddata": true
+    },
+    "marca": {
+      "type": "text",
+      "fielddata": true
     }
   }
 }
