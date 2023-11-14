@@ -5,26 +5,28 @@ Web sobre recuperación de información sobre moda
 
 Mover la carpeta elasticsearch-8.10.2/ a modariws/ (próxima actualización bajarla directamente en el docker)
 
-Ejecutar contenedor de elasticsearch
+Ejecutar contenedor de elasticsearch:
 ```bash
 cd modariws/
 docker build -f DockerfileElasticsearch -t elasticsearch-image .
 docker run --name elasticsearch -p 9200:9200 --network moda-riws-network elasticsearch-image
 ```
 
-Comprobar que el contenedor de elasticsearch se encuentra en la dirección ipv4 172.24.0.2. Si no lo está es necesario cambiar la conexión en los spyders (es = Elasticsearch([{'host': '172.24.0.2', 'port': 9200, 'scheme': 'http'}]) en los ficheros xxx_spyder.py).
+Comprobar que el contenedor de elasticsearch se encuentra en la dirección ipv4 172.24.0.2. Si no lo está es necesario cambiar la ip de la conexión con elasticsearch (variable ES_HOST del fichero modariws/spiders/elasticsearch_connection.py).
 
 ```bash
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' elasticsearch
 ```
 
-Ejecutar contenedor de scrapy
+Si elasticsearch se está ejecutando correctamente y escuchando en el puerto 9200 se puede proseguir ejecutando scrapy.
+Ejecutar contenedor de scrapy:
 ```bash
 docker build -f DockerfileScrapy -t scrapy-image .
 docker run --name scrapy --network moda-riws-network scrapy-image
 ```
 
-Ejecutar contenedor del frontend
+En cuanto se recuperen los primeros elementos ya se puede ejecutar el contenedor del frontend y poco a poco se irán recuperando más productos.
+Ejecutar contenedor del frontend:
 ```bash
 cd frontend/
 docker build -f DockerfileReact -t react-image .

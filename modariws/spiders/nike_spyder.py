@@ -6,6 +6,7 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy import Request
 from bs4 import BeautifulSoup
 from modariws.items import Producto
+from . import elasticsearch_connection
 
 
 class NikeSpider(scrapy.Spider):
@@ -22,7 +23,7 @@ class NikeSpider(scrapy.Spider):
         'https://www.nike.com/es/'
     ]
 
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+    es = Elasticsearch([{'host': elasticsearch_connection.ES_HOST, 'port': elasticsearch_connection.ES_PORT, 'scheme': elasticsearch_connection.ES_SCHEME}])
 
     def parse(self, response):
         exists = False

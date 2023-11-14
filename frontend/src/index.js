@@ -4,21 +4,15 @@ import {
   ReactiveBase,
   DataSearch,
   ReactiveList,
-  SingleDropdownList,
-  RangeInput,
   SelectedFilters,
   MultiDropdownList,
+  RangeSlider
 } from '@appbaseio/reactivesearch';
 
 import './App.css'; // Agrega el archivo de estilos
 
 const App = () => {
   const [resetKey, setResetKey] = useState(0);
-
-  const handleClearAll = () => {
-    // Incrementar la clave de reinicio para forzar la actualización de ReactiveSearch
-    setResetKey((prevKey) => prevKey + 1);
-  };
 
   return (
     <ReactiveBase
@@ -41,7 +35,7 @@ const App = () => {
 
         <div className="filters-container">
           <div className="filter-section">
-            <RangeInput
+            <RangeSlider
               componentId='PriceSlider'
               dataField='precio'
               tooltipTrigger='hover'
@@ -55,6 +49,7 @@ const App = () => {
               }}
               react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
               title='Precio'
+              showHistogram={false}
             />
           </div>
 
@@ -121,7 +116,6 @@ const App = () => {
             showClearAll={true}
             clearAllLabel="Limpiar todo"
             componentId="search"
-            onClear={handleClearAll}
           />
         </div>
 

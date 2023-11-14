@@ -6,13 +6,14 @@ from elasticsearch import Elasticsearch
 from scrapy import Request
 from scrapy.linkextractors import LinkExtractor
 import re
-
+from . import elasticsearch_connection
 
 class hymSpider(scrapy.Spider):
     name = "hym"
     allowed_domains = ['hm.com']
     start_urls = ['https://www2.hm.com/es_es/']
-    es = Elasticsearch([{'host': '172.24.0.2', 'port': 9200, 'scheme': 'http'}])
+    es = Elasticsearch([{'host': elasticsearch_connection.ES_HOST, 'port': elasticsearch_connection.ES_PORT, 'scheme': elasticsearch_connection.ES_SCHEME}])
+    # es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
     def parse(self, response):
         producto = Producto()

@@ -9,6 +9,7 @@ from scrapy.linkextractors import LinkExtractor
 
 from bs4 import BeautifulSoup
 from modariws.items import Producto
+from . import elasticsearch_connection
 
 
 class NicolishopSpider(scrapy.Spider):
@@ -16,7 +17,7 @@ class NicolishopSpider(scrapy.Spider):
     allowed_domains = ['nicolishop.com']
     start_urls = ['https://www.nicolishop.com']
 
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+    es = Elasticsearch([{'host': elasticsearch_connection.ES_HOST, 'port': elasticsearch_connection.ES_PORT, 'scheme': elasticsearch_connection.ES_SCHEME}])
 
     def parse(self, response):
         producto = Producto()
