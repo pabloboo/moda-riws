@@ -1,35 +1,42 @@
-version: '3.7'
-
+version: '3'
 services:
-
-  # elasticsearch:
-  #   build: 
-  #     context: ./modariws
-  #   container_name: elasticsearch
-  #   ports:
-  #     - 9200:9200
-  #   networks:
-  #     - moda-riws-network
+  elasticsearch:
+    build:
+      context: modariws/
+      dockerfile: DockerfileElasticsearch
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    networks:
+      moda-riws-network:
+        ipv4_address: 172.24.0.2  # Use an IP address within your custom subnet range
 
   scrapy:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileScrapy
+    container_name: scrapy
+    networks:
+      - moda-riws-network
     depends_on:
       - elasticsearch
-    networks:
-      - moda-riws-network
 
-  web-app:
+  react:
     build:
-      context: ./frontend
+      context: frontend/
+      dockerfile: DockerfileReact
+    container_name: react
     ports:
       - "3000:3000"
-    depends_on:
-      - scrapy
     networks:
       - moda-riws-network
+    depends_on:
+      - scrapy
 
 networks:
   moda-riws-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24  # Use your custom subnet range
+          gateway: 172.24.0.1   # Use your desired gateway

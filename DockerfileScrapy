@@ -35,12 +35,12 @@ USER root
 RUN chmod +w /app/productos.json
 # Change ownership to the non-root user
 RUN chown nonrootuser /app/productos.json
-# Same with entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-RUN chown nonrootuser /app/entrypoint.sh
+# Same with execute-scrapy.sh
+RUN chmod +x /app/execute-scrapy.sh
+RUN chown nonrootuser /app/execute-scrapy.sh
 # RUN chmod +r /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
 # Switch back to non-root user
 USER nonrootuser
 
 # Set up entry point script
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/execute-scrapy.sh"]

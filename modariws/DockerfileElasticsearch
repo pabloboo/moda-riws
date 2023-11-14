@@ -17,31 +17,29 @@ RUN chmod -R 777 /app
 # Switch to the non-root user
 USER nonrootuser
 
-# Create a directory to install Elasticsearch
-# RUN mkdir -p /app/elasticsearch
-# WORKDIR /app/elasticsearch
+# # Create a directory to install Elasticsearch
+# # RUN mkdir -p /app/elasticsearch
+# # WORKDIR /app/elasticsearch
 # # Install Elasticsearch
 # RUN curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.10.2-linux-x86_64.tar.gz
 # RUN tar -xvf elasticsearch-8.10.2-linux-x86_64.tar.gz
 
 # # Clear the existing content of elasticsearch.yml
-# RUN echo "" > /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "" > /app/elasticsearch-8.10.2/config/elasticsearch.yml
 
 # # Copy the content of your local elasticsearch.yml to the container
-# COPY elasticsearch.yml /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
+# COPY elasticsearch.yml /app/elasticsearch-8.10.2/config/elasticsearch.yml
+
+# # Delete config file
+# RUN rm -rf /app/elasticsearch-8.10.2/config/
+# # Copy config file
+# COPY config/ /app/elasticsearch-8.10.2/config/
 
 # USER root
 # # Adjust file permissions
-# RUN chown -R nonrootuser /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml \
-#     && chmod 644 /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN chown -R nonrootuser /app/elasticsearch-8.10.2/config/elasticsearch.yml \
+#     && chmod 644 /app/elasticsearch-8.10.2/config/elasticsearch.yml
 # USER nonrootuser
-
-# RUN echo "xpack.security.enabled: false" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
-# RUN echo "http.cors.enabled: true" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
-# RUN echo "http.cors.allow-origin: '*'" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
-# RUN echo "http.cors.allow-credentials: true" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
-# RUN echo "http.cors.allow-headers: 'X-Requested-With, Content-Type, Content-Length, Authorization'" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
-# RUN echo "network.host: 0.0.0.0" >> /app/elasticsearch/elasticsearch-8.10.2/config/elasticsearch.yml
 
 # Create a working directory for your Scrapy project
 WORKDIR /app
