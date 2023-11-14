@@ -12,7 +12,7 @@ class hymSpider(scrapy.Spider):
     name = "hym"
     allowed_domains = ['hm.com']
     start_urls = ['https://www2.hm.com/es_es/']
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+    es = Elasticsearch([{'host': '172.24.0.2', 'port': 9200, 'scheme': 'http'}])
 
     def parse(self, response):
         producto = Producto()

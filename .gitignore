@@ -1,3 +1,4 @@
 productos.json
 modariws/__pycache__/
 modariws/spiders/__pycache__/
+modariws/elasticsearch-8.10.2/
