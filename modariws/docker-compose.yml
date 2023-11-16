@@ -26,7 +26,13 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+    networks:
+      - moda-riws-network
 
 volumes:
   elasticsearch-data:
     driver: local
+
+networks:
+  moda-riws-network:
+    driver: bridge
