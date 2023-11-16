@@ -11,6 +11,8 @@ cd modariws/
 docker-compose up
 ```
 
+En caso de que ese comando no funcione se puede usar: docker compose up
+
 Comprobar que el contenedor de elasticsearch se encuentra en la dirección ipv4 172.24.0.2. Si no lo está es necesario cambiar la ip de la conexión con elasticsearch (variable ES_HOST del fichero modariws/spiders/elasticsearch_connection.py) y la ip de la petición curl del archivo execute-scrapy.sh, línea 7.
 
 ```bash
@@ -38,6 +40,26 @@ Ejecutar contenedor del frontend:
 cd frontend/
 docker build -f DockerfileReact -t react-image .
 docker run --name react -p 3000:3000 --network modariws_moda-riws-network react-image
+```
+
+Si al desplegar la web no se muestran los filtros de color,talla y marca es necesario ejecutar en una terminal el siguiente comando cambiando la ip por la ip en la que se está ejecutando el contenedor de elastic:
+```bash
+curl -X PUT "http://172.20.0.2:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
+  "properties": {
+    "color": {
+      "type": "text",
+      "fielddata": true
+    },
+    "tallas": {
+      "type": "text",
+      "fielddata": true
+    },
+    "marca": {
+      "type": "text",
+      "fielddata": true
+    }
+  }
+}'
 ```
 
 ## Ejecución sin Docker

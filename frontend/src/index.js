@@ -49,7 +49,7 @@ const App = () => {
               }}
               react={{ and: ['search', 'PriceSlider', 'ColorFilter', 'TallasFilter', 'MarcaFilter'] }}
               title='Precio'
-              showHistogram={false}
+              // showHistogram={false}
             />
           </div>
 
