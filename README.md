@@ -141,3 +141,11 @@ NO funciona porque el contenedor de elasticsearch no se ejecuta siempre en la mi
 ```bash
 docker-compose up
 ```
+
+## Estructura de los ficheros
+
+En el directorio principal se pueden encontrar los archivos necesarios para la configuración en Docker de Scrapy, la carpeta frontend/ con el código de React y la carpeta modariws/ con el código del back-end.
+
+En la carpeta modariws/ se encuentra el archivo de configuración en docker-compose de ElasticSearch además de los ficheros necesarios para scrapear las webs. Los spiders de las distintas webs de moda se encuentran en el directorio spiders/
+
+Por último, en el directorio frontend/ se encuentra todo el código de react. Además en este directorio también se pueden encontrar los archivos de configuración de Docker para el frontend en React.
