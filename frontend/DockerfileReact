@@ -30,6 +30,10 @@ RUN node -v
 RUN npm -v
 RUN npm install @appbaseio/reactivesearch@3.45.0 --legacy-peer-deps
 
+RUN npm install react
+RUN npm install -g react-scripts
+RUN npm install react-dom
+
 # Create a working directory for your Scrapy project
 WORKDIR /app
 

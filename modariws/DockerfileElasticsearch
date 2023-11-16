@@ -49,12 +49,67 @@ COPY . /app
 
 USER root
 # Adjust file permissions
+RUN chown -R nonrootuser /app/elasticsearch-8.10.2/config/elasticsearch.yml \
+    && chmod 644 /app/elasticsearch-8.10.2/config/elasticsearch.yml
+USER nonrootuser
+
+# RUN echo "xpack.security.enabled: false" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "http.cors.enabled: true" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "http.cors.allow-origin: '*'" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "http.cors.allow-credentials: true" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "http.cors.allow-headers: 'X-Requested-With, Content-Type, Content-Length, Authorization'" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+# RUN echo "network.host: 0.0.0.0" >> /app/elasticsearch-8.10.2/config/elasticsearch.yml
+
+USER root
+# Clear the existing content of elasticsearch.yml
+RUN rm /app/elasticsearch-8.10.2/config/elasticsearch.yml
+USER nonrootuser
+
+# Copy the content of your local elasticsearch.yml to the container
+COPY elasticsearch.yml /app/elasticsearch-8.10.2/config/elasticsearch.yml
+
+USER root
+# Adjust file permissions
+RUN chown -R nonrootuser /app/elasticsearch-8.10.2/config/elasticsearch.yml \
+    && chmod 644 /app/elasticsearch-8.10.2/config/elasticsearch.yml
+USER nonrootuser
+
+USER root
+# Adjust file permissions
 RUN chown -R nonrootuser /app/elasticsearch-8.10.2/ \
     && chmod 777 /app/elasticsearch-8.10.2/
 RUN chmod 777 /app/elasticsearch-8.10.2/jdk/bin/java
 RUN chmod 777 /app/execute-elasticsearch.sh
 RUN chmod 777 /app/elasticsearch-8.10.2/bin/elasticsearch
 USER nonrootuser
+
+##############CERTIFICATES#####################
+
+# # Install required tools
+# RUN yum install -y openssl
+
+# # Generate certs
+# RUN openssl genpkey -algorithm RSA -out /app/ca.key -aes256 -pass pass:yourpassphrase
+# RUN openssl req -new -key /app/ca.key -out ca.csr -subj "/C=US/ST=State/L=City/O=Organization/CN=My CA"
+# RUN openssl x509 -req -days 365 -in ca.csr -signkey /app/ca.key -out /app/ca.crt
+
+# # Copy CA files and certificates
+# COPY /app/ca.crt /app/elasticsearch-8.10.2/config/certs/
+# COPY /app/ca.key /app/elasticsearch-8.10.2/config/certs/
+# # COPY node_certificates/* /tmp/node_certificates/
+
+# # Update CA truststore in Elasticsearch
+# RUN keytool -importcert -trustcacerts -noprompt -keystore /app/elasticsearch-8.10.2/config/certs/elastic-stack-ca.p12 \
+#     -storepass <password> -alias new-ca -file /tmp/ca.crt
+
+# # Generate and update new certificates for each node
+# RUN cd /usr/share/elasticsearch/bin && \
+#     ./elasticsearch-certutil cert --ca-cert /app/elasticsearch-8.10.2/config/certs/ca.crt --ca-key /app/elasticsearch-8.10.2/config/certs/ca.key -out /app/elasticsearch-8.10.2/config/certs/elastic-certificates.p12
+
+# # Set the necessary permissions
+# RUN chown -R nonrootuser /app/elasticsearch-8.10.2/config/certs/elastic-certificates.p12 && \
+#     chmod 777 /app/elasticsearch-8.10.2/config/certs/elastic-certificates.p12
+
 
 # Expose port 9200 for Elasticsearch
 EXPOSE 9200
