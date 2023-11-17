@@ -4,7 +4,7 @@
 chmod +w productos.json
 
 # Configure Elasticsearch for fields
-curl -X PUT "http://172.24.0.2:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
+curl -X PUT "http://localhost:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
   "properties": {
     "color": {
       "type": "text",
