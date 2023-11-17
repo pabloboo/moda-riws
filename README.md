@@ -13,7 +13,7 @@ docker-compose up
 
 En caso de que ese comando no funcione se puede usar: docker compose up
 
-Comprobar que el contenedor de elasticsearch se encuentra en la dirección ipv4 172.24.0.2. Si no lo está es necesario cambiar la ip de la conexión con elasticsearch (variable ES_HOST del fichero modariws/spiders/elasticsearch_connection.py) y la ip de la petición curl del archivo execute-scrapy.sh, línea 7.
+Comprobar que el contenedor de elasticsearch se encuentra en la dirección ipv4 172.24.0.2. Si no lo está es necesario cambiar la ip de la conexión con elasticsearch (variable ES_HOST del fichero modariws/spiders/elasticsearch_connection.py).
 
 ```bash
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' elasticsearch
