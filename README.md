@@ -44,7 +44,7 @@ docker run --name react -p 3000:3000 --network modariws_moda-riws-network react-
 
 Si al desplegar la web no se muestran los filtros de color,talla y marca es necesario ejecutar en una terminal el siguiente comando cambiando la ip por la ip en la que se está ejecutando el contenedor de elastic:
 ```bash
-curl -X PUT "http://172.20.0.2:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
+curl -X PUT "http://localhost:9200/productos/_mapping" -H "Content-Type: application/json" -d '{
   "properties": {
     "color": {
       "type": "text",
